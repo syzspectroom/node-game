@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost');
+var socket = io.connect('http://192.168.0.149');
 $(function() {
 	// socket.emit('new_player_connected', { player_name: 'data' });
 
@@ -7,12 +7,21 @@ $(function() {
     start();
     selfId = data.id;
     addPlayer(data.id);
+
+    for(var key in data.players){
+      addPlayer(data.players[key]);
+    }
+
+
+
   });
 
   socket.on('new_player_registered', function(data) {
   	console.log('new player:' + data.id);
     addPlayer(data.id);
   });
+
+  socket.on('newFrame', animateFrame)
 
   socket.on('player_disconnected', function(data) {
   	console.log('player disconnected:' + data.id);

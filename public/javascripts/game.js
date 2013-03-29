@@ -1,6 +1,6 @@
 var cfg = {
-    scr: {w: 300,
-        h: 400
+    scr: {w: 800,
+          h: 600
     }
 }
 
@@ -20,17 +20,17 @@ function start() {
 }
 
 function addPlayer(playerId) {
-    var newShip = new Entity({x: Math.random() * 200, y: Math.random() * 200}, "/images/bunny.png");
+    var newShip = new FrontendEntity("/images/bunny.png");
     ships[playerId] = newShip;
 }
 
 function animate() {
-
+    playerDo('getFrame');
+}
+function animateFrame(frame) {
     for (var key in ships) {
-        ships[key].update();
+        ships[key].updateWithData(frame[key]);
     }
-
-    //update ships with new drawData
 
     renderer.render(stage);
 
@@ -38,74 +38,25 @@ function animate() {
 }
 
 
-var Entity = (function () {
+var FrontendEntity = (function () {
 
-    function Entity(pos, img) {
-        this.pos = pos;
-        this.vel = {x: 0, y: 0};
-
-        this.angle = Math.random() * 6;
-        this.angle_vel = 0;
-        this.angle_koef = 0.05
-
-        this.spd_coef = 0.1;
-        this.lubricous = 0.99 // = 1 - friction
-
-        this.thrust = false;
-
+    function Entity(img) {
         this.pixiEntityTexture = PIXI.Texture.fromImage(img);
         this.pixiEntity = new PIXI.Sprite(this.pixiEntityTexture);
         this.pixiEntity.anchor = new PIXI.Point(0.5, 0.5);
         this.pixiEntity.scale.x = 3;
         this.pixiEntity.scale.y = 3;
 
-        this.serializeWithPixi();
+        this.pixiEntity.rotation = 0;
+        this.pixiEntity.position.x = 0;
+        this.pixiEntity.position.y = 0;
 
         stage.addChild(this.pixiEntity);
     }
 
-    Entity.prototype.serializeWithPixi = function () {
-        this.pixiEntity.rotation = this.angle;
-//        + Math.PI/2;
-        this.pixiEntity.position.x = this.pos.x;
-        this.pixiEntity.position.y = this.pos.y;
-    };
-
-    Entity.prototype.update = function () {
-
-        this.angle += this.angle_vel
-
-        var forward = angle_to_vector(this.angle);
-
-        if (this.thrust) {
-            this.vel.x += forward.x * this.spd_coef;
-            this.vel.y += forward.y * this.spd_coef;
-        }
-
-        this.vel.x *= this.lubricous;
-        this.vel.y *= this.lubricous;
-
-        this.pos.x = (this.pos.x + this.vel.x + cfg.scr.w) % cfg.scr.w;
-        this.pos.y = (this.pos.y + this.vel.y + cfg.scr.h) % cfg.scr.h;
-
-        this.serializeWithPixi();
-    };
-
-    Entity.prototype.incAngleVelocity = function () {
-        this.angle_vel += this.angle_koef;
-    }
-    Entity.prototype.decAngleVelocity = function () {
-        this.angle_vel -= this.angle_koef;
-    }
-    Entity.prototype.engineOn = function () {
-        this.thrust = true;
-    }
-    Entity.prototype.engineOff = function () {
-        this.thrust = false;
-    }
-
-    Entity.prototype.drawData = function(){
-        return {x: this.pos.x, y: this.pos.y, angle: this.rotation};
+    Entity.prototype.updateWithData = function (data){
+        this.pixiEntity.position = data.position;
+        this.pixiEntity.rotation = data.rotation + Math.PI/2;
     }
 
     return Entity;

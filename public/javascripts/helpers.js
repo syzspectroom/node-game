@@ -7,10 +7,6 @@ window.log = function f(){ log.history = log.history || []; log.history.push(arg
 (function(){try{console.log();return window.console;}catch(a){return (window.console={});}}());
 
 
-function angle_to_vector(ang) {
-    return {x: Math.cos(ang), y: Math.sin(ang)}
-}
-
 
 (function() {
     var lastTime = 0;
