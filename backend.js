@@ -1,6 +1,6 @@
 players = [];
 exports.removePlayer = function(playerId) {
-	delete socketClients[this.id];
+	delete players[this.id];
 }
 
 exports.addPlayer = function(playerId) {
