@@ -4,7 +4,7 @@ var cfg = {
     }
 }
 
-
+var selfId;
 var ships = [];
 var renderer,
     stage;
@@ -15,15 +15,13 @@ function start() {
     renderer = new PIXI.autoDetectRenderer(cfg.scr.w, cfg.scr.h);
     document.body.appendChild(renderer.view);
     stage = new PIXI.Stage;
-
-    addPlayer();
-
+    // addPlayer(playerId);
     requestAnimationFrame(animate);
 }
 
-function addPlayer() {
+function addPlayer(playerId) {
     var newShip = new Entity({x: Math.random() * 200, y: Math.random() * 200}, "/images/bunny.png");
-    ships.push(newShip);
+    ships[playerId] = newShip;
 }
 
 function animate() {
@@ -31,6 +29,8 @@ function animate() {
     for (var key in ships) {
         ships[key].update();
     }
+
+    //update ships with new drawData
 
     renderer.render(stage);
 
@@ -55,8 +55,9 @@ var Entity = (function () {
 
         this.pixiEntityTexture = PIXI.Texture.fromImage(img);
         this.pixiEntity = new PIXI.Sprite(this.pixiEntityTexture);
-        this.pixiEntity.scale.x = 1;
-        this.pixiEntity.scale.y = 1;
+        this.pixiEntity.anchor = new PIXI.Point(0.5, 0.5);
+        this.pixiEntity.scale.x = 3;
+        this.pixiEntity.scale.y = 3;
 
         this.serializeWithPixi();
 
@@ -103,31 +104,43 @@ var Entity = (function () {
         this.thrust = false;
     }
 
+    Entity.prototype.drawData = function(){
+        return {x: this.pos.x, y: this.pos.y, angle: this.rotation};
+    }
+
     return Entity;
 })();
 
 
 KeyboardJS.onPress('w',
     function () {
-        ships[0].engineOn();
+        // ships[selfId].engineOn();
+        playerDo('engineOn');
     },
     function () {
-        ships[0].engineOff();
+        playerDo('engineOff');
+        // ships[selfId].engineOff();
     }
 );
 KeyboardJS.onPress('a',
     function () {
-        ships[0].decAngleVelocity();
+        playerDo('decAngleVelocity');
+        // ships[selfId].decAngleVelocity();
     },
     function () {
-        ships[0].incAngleVelocity();
+        // ships[selfId].incAngleVelocity();
+        playerDo('incAngleVelocity');
     }
 );
 KeyboardJS.onPress('d',
     function () {
-        ships[0].incAngleVelocity();
+        playerDo('incAngleVelocity');
+        // ships[selfId].incAngleVelocity();
     },
     function () {
-        ships[0].decAngleVelocity();
+        playerDo('decAngleVelocity');
+        // ships[selfId].decAngleVelocity();
     }
 );
+
+
