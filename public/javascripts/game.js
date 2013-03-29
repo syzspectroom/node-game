@@ -15,6 +15,12 @@ function start() {
     renderer = new PIXI.autoDetectRenderer(cfg.scr.w, cfg.scr.h);
     document.body.appendChild(renderer.view);
     stage = new PIXI.Stage;
+
+    // create a background..
+    var background = PIXI.Sprite.fromImage("/images/bg.png");
+    // add background to stage..
+    stage.addChild(background);
+
     // addPlayer(playerId);
     requestAnimationFrame(animate);
 }
