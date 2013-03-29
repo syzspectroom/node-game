@@ -25,6 +25,7 @@ $(function() {
 
   socket.on('player_disconnected', function(data) {
   	console.log('player disconnected:' + data.id);
+    removePlayer(data.id);
   });
 
   socket.on('disconnect', function() {

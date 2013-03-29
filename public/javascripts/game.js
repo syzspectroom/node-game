@@ -30,6 +30,11 @@ function addPlayer(playerId) {
     ships[playerId] = newShip;
 }
 
+function removePlayer(playerId){
+    stage.removeChild(ships[playerId].pixiEntity);
+    delete ships[playerId];
+}
+
 function animate() {
     playerDo('getFrame');
 }
@@ -61,8 +66,10 @@ var FrontendEntity = (function () {
     }
 
     Entity.prototype.updateWithData = function (data){
-        this.pixiEntity.position = data.position;
-        this.pixiEntity.rotation = data.rotation + Math.PI/2;
+        if( typeof data !== "undefined"){
+            this.pixiEntity.position = data.position;
+            this.pixiEntity.rotation = data.rotation + Math.PI/2;
+        }
     }
 
     return Entity;

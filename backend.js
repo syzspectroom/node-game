@@ -1,6 +1,6 @@
 players = [];
 exports.removePlayer = function(playerId) {
-	delete players[this.id];
+	delete players[playerId];
 }
 
 exports.addPlayer = function(playerId) {
@@ -24,14 +24,33 @@ exports.decAngleVelocity = function(playerId) {
 	console.log('decAngleVelocity');
 }
 
+var frame = {};
+var lastUpdateTime = 0
 exports.getFrame = function() {
-  var frame ={};
-  for (var key in players) {
-    players[key].update();
-    frame[key] = players[key].dataForPixi();
+  if ((Date.now()- lastUpdateTime) >  (1000/60)){
+
+      lastUpdateTime = Date.now();
+      console.log('calc');
+        for (var key in players) {
+          players[key].update();
+          frame[key] = players[key].dataForPixi();
+        }
   }
+  //   for (var key in players) {
+  //     players[key].update();
+  //     frame[key] = players[key].dataForPixi();
+  //   }
   return frame;
 }
+
+// setInterval(calculateFrame, 1000/60);
+
+// function calculateFrame(){
+//     for (var key in players) {
+//       players[key].update();
+//       frame[key] = players[key].dataForPixi();
+//     }
+// }
 
 exports.getPlayerIds = function(){
   var ids =[];
