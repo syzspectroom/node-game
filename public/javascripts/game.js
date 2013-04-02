@@ -8,21 +8,19 @@ var selfId;
 var ships = [];
 var renderer,
     stage;
+var currentKeyFrame,
+    frameBuffer = [];
 
-// document.addEventListener('DOMContentLoaded', start, false);
+var showKeyFrame;
+
 
 function start() {
     renderer = new PIXI.autoDetectRenderer(cfg.scr.w, cfg.scr.h);
     document.body.appendChild(renderer.view);
     stage = new PIXI.Stage;
 
-    // create a background..
     var background = PIXI.Sprite.fromImage("/images/bg.png");
-    // add background to stage..
     stage.addChild(background);
-
-    // addPlayer(playerId);
-    requestAnimationFrame(animate);
 }
 
 function addPlayer(playerId) {
@@ -36,16 +34,60 @@ function removePlayer(playerId){
 }
 
 function animate() {
-    playerDo('getFrame');
-}
-function animateFrame(frame) {
-    for (var key in ships) {
-        ships[key].updateWithData(frame[key]);
+  // setTimeout(function() {
+    try{
+      for (var key in ships) {
+          ships[key].updateWithData(frameBuffer[showKeyFrame][key]);
+          showKeyFrame += 1;
+          // console.log('frameBuffer length:' + frameBuffer.length);
+          // console.log('showKeyFrame:'+ showKeyFrame);
+      }
+    } catch (e){
+      console.log(e.stack);
+      console.log('showKeyFrame:'+ showKeyFrame);
     }
 
     renderer.render(stage);
-
     requestAnimationFrame(animate);
+  // }, 1000 / 30);
+}
+
+var isStarted = false;
+function addKeyFrame(frameEl){
+  frameBuffer[frameEl.frameCounter] = frameEl.frame;
+  currentKeyFrame = frameEl.frameCounter;
+  showKeyFrame = currentKeyFrame - 24;
+
+  interpolateMoreFrames();
+
+  if (!isStarted) {
+    isStarted = true;
+    animate();
+  }
+}
+
+function interpolateMoreFrames(){
+  var  = currentKeyFrame - 24;
+prevFrame  var
+
+  for(var i = 1; i< 6; i++){
+
+    var curFrame = prevFrame + i;
+    var newFrameData = {};
+
+    for (var key in frameBuffer[prevFrame]) {
+      var x = frameBuffer[prevFrame][key].position.x + (frameBuffer[currentKeyFrame-18][key].position.x - frameBuffer[prevFrame][key].position.x)/6 * i;
+      var y = frameBuffer[prevFrame][key].position.y + (frameBuffer[currentKeyFrame-18][key].position.y - frameBuffer[prevFrame][key].position.y)/6 * i;
+      var rotation = frameBuffer[prevFrame][key].rotation + (frameBuffer[currentKeyFrame-18][key].rotation - frameBuffer[prevFrame][key].rotation)/6 * i;
+
+      newFrameData[key] = {position: {x: x, y: y}, rotation: rotation}
+    }
+
+    frameBuffer[curFrame] = newFrameData;
+    console.log('generated ' + curFrame);
+  }
+
+
 }
 
 
@@ -78,32 +120,26 @@ var FrontendEntity = (function () {
 
 KeyboardJS.onPress('w',
     function () {
-        // ships[selfId].engineOn();
         playerDo('engineOn');
     },
     function () {
         playerDo('engineOff');
-        // ships[selfId].engineOff();
     }
 );
 KeyboardJS.onPress('a',
     function () {
         playerDo('decAngleVelocity');
-        // ships[selfId].decAngleVelocity();
     },
     function () {
-        // ships[selfId].incAngleVelocity();
         playerDo('incAngleVelocity');
     }
 );
 KeyboardJS.onPress('d',
     function () {
         playerDo('incAngleVelocity');
-        // ships[selfId].incAngleVelocity();
     },
     function () {
         playerDo('decAngleVelocity');
-        // ships[selfId].decAngleVelocity();
     }
 );
 

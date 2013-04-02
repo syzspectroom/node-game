@@ -12,8 +12,6 @@ $(function() {
       addPlayer(data.players[key]);
     }
 
-
-
   });
 
   socket.on('new_player_registered', function(data) {
@@ -21,7 +19,7 @@ $(function() {
     addPlayer(data.id);
   });
 
-  socket.on('newFrame', animateFrame)
+  socket.on('newFrame', addKeyFrame)
 
   socket.on('player_disconnected', function(data) {
   	console.log('player disconnected:' + data.id);

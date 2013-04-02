@@ -1,4 +1,4 @@
-players = [];
+var players = [];
 exports.removePlayer = function(playerId) {
 	delete players[playerId];
 }
@@ -24,24 +24,20 @@ exports.decAngleVelocity = function(playerId) {
 	console.log('decAngleVelocity');
 }
 
+var frameCounter = 0;
 var frame = {};
-var lastUpdateTime = 0
 exports.getFrame = function() {
-  if ((Date.now()- lastUpdateTime) >  (1000/60)){
+  frameCounter += 6;
 
-      lastUpdateTime = Date.now();
-      console.log('calc');
-        for (var key in players) {
-          players[key].update();
-          frame[key] = players[key].dataForPixi();
-        }
+  for (var key in players) {
+    players[key].update();
+    frame[key] = players[key].dataForPixi();
   }
-  //   for (var key in players) {
-  //     players[key].update();
-  //     frame[key] = players[key].dataForPixi();
-  //   }
-  return frame;
+
+  return {frame: frame, frameCounter: frameCounter};
 }
+
+
 
 // setInterval(calculateFrame, 1000/60);
 
@@ -77,9 +73,9 @@ var Entity = (function () {
 
         this.angle = Math.random() * 6;
         this.angle_vel = 0;
-        this.angle_koef = 0.05
+        this.angle_koef = 0.10;
 
-        this.spd_coef = 0.1;
+        this.spd_coef = 0.4;
         this.lubricous = 0.99 // = 1 - friction
 
         this.thrust = false;

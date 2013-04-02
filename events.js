@@ -16,18 +16,22 @@ exports.init = function() {
   	socket.on('disconnect', playerDisconnected );
   });
 
+  setInterval(function(){
+    io.sockets.emit('newFrame', backend.getFrame());
+  }, 1000/10);
+
   function initPlayerMoves(socket) {
-	socket.on('engineOn', function(){backend.engineOn(socket.id)} );
-	socket.on('engineOff', function(){backend.engineOff(socket.id)}  );
-	socket.on('incAngleVelocity', function(){backend.incAngleVelocity(socket.id)}  );
-	socket.on('decAngleVelocity', function(){backend.decAngleVelocity(socket.id)}  );
-  socket.on('getFrame', function() {
+  	socket.on('engineOn', function(){backend.engineOn(socket.id)} );
+  	socket.on('engineOff', function(){backend.engineOff(socket.id)}  );
+  	socket.on('incAngleVelocity', function(){backend.incAngleVelocity(socket.id)}  );
+  	socket.on('decAngleVelocity', function(){backend.decAngleVelocity(socket.id)}  );
+    // socket.on('getFrame', function() {
 
-    frame = backend.getFrame();
-    socket.emit('newFrame', frame);
-  });
-
+    //   frame = backend.getFrame();
+    //   socket.emit('newFrame', frame);
+    // });
   }
+
 
   function playerDisconnected() {
   	delete socketClients[this.id];
