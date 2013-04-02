@@ -67,8 +67,7 @@ function addKeyFrame(frameEl){
 }
 
 function interpolateMoreFrames(){
-  var  = currentKeyFrame - 24;
-prevFrame  var
+  var prevFrame = currentKeyFrame - 24;
 
   for(var i = 1; i< 6; i++){
 
